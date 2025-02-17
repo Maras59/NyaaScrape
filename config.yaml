@@ -1,6 +1,6 @@
 
 secure: False
-host: "placeholder"
+qBit_HOST: "placeholder"
 
 credentials:
   username: "placeholder"
