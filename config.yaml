@@ -1,12 +1,8 @@
-
-secure: False
 qBit_HOST: "placeholder"
 
 credentials:
   username: "placeholder"
   password: "placeholder"
-
-api: False
 
 FULL_BATCH_THRESHOLD: 1.5
 
