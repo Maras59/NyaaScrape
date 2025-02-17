@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-import yaml
+from datetime import datetime
 
 def getshowdata(query, subgroup=None, configs=None):
     """
@@ -23,9 +23,12 @@ def getshowdata(query, subgroup=None, configs=None):
         links = row.find_all('a')
         cols = [ele.text.strip() for ele in cols]
         tmp['title'] = links[2].text if 'comments' in links[1].get('class', []) else links[1].text
-        tmp['magnet'] = links[3]['href']
+        tmp['magnet'] = links[3].attrs['href'] if 'magnet' in links[3].attrs['href'] else links[4].attrs['href']
         tmp['seeders'] = int(cols[5])
-        tmp['date'] = cols[4]
+
+        # convert from string format to datetime format
+        dtime = datetime.strptime(cols[4], "%Y-%m-%d %H:%M")
+        tmp['date'] = dtime
 
         # Calculate filesize
         t = cols[3].split()
@@ -38,4 +41,3 @@ def getshowdata(query, subgroup=None, configs=None):
         data.append(tmp)
 
     return data
-
