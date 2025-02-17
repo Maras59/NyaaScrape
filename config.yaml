@@ -1,0 +1,14 @@
+
+secure: False
+host: "placeholder"
+
+credentials:
+  username: "placeholder"
+  password: "placeholder"
+
+api: False
+
+full_batch_threshold: 1.5
+
+BASE_URL: 'https://nyaa.si/?'
+TABLE_CLASS: 'table table-bordered table-hover table-striped torrent-list'

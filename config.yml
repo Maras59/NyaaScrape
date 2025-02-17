@@ -1,9 +1,0 @@
-
-secure: False
-host: "placeholder"
-
-credentials:
-  username: "placeholder"
-  password: "placeholder"
-
-api: False
