@@ -5,6 +5,9 @@ import datetime
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
+from requests.exceptions import ConnectionError
+from urllib3.exceptions import MaxRetryError
+from urllib3.exceptions import NewConnectionError
 
 def getshowdata(query,subgroup=None,configs=None,keywords=None):
     """
@@ -51,12 +54,14 @@ def getshowdata(query,subgroup=None,configs=None,keywords=None):
 
 
 def harvest_magnet_links(conf):
-    with open('shows.csv', 'r') as read_obj:
+    with open(conf['SHOW_CSV_PATH'], 'r') as read_obj:
         r = csv.reader(read_obj)
-        show_list = list(r)[1:]
+        show_list = list(r)
 
     magnet_links = []
-    for show in show_list:
+    for i, show in enumerate(show_list):
+        if i == 0: continue
+
         latest_date = datetime.strptime(show[2], "%Y-%m-%d %H:%M")
         threshold = conf['FULL_BATCH_THRESHOLD'] if float(show[3]) < 0.0 else float(show[3])
 
@@ -65,20 +70,37 @@ def harvest_magnet_links(conf):
 
         for torrent in torrent_list:
             if torrent['date'] > latest_date and torrent['size'] < threshold:
-                show[2] = torrent['date'].strftime("%Y-%m-%d %H:%M")
+                if torrent['date'] > datetime.strptime(show_list[i][2], "%Y-%m-%d %H:%M"):
+                    show_list[i][2] = torrent['date'].strftime("%Y-%m-%d %H:%M")
                 magnet_links.append((torrent['magnet'], show[4], torrent['title']))
-    # TODO: Update CSV with updates dates
+        
+    with open(conf['SHOW_CSV_PATH'], 'w') as file:
+        writer = csv.writer(file)
+        writer.writerows(show_list)
+
     return magnet_links
 
 def start_qBit(magnet_links, conf):
-    # api/v2/auth/
     # start qBit session
     auth = conf['credentials']
     headers = {'Referer': conf['qBit_HOST']}
     
     # Perform login request
-    res = requests.post(f'{conf['qBit_HOST']}api/v2/auth/login', headers=headers, data=auth)
-    print('Login response:', res)
+    try:
+        res = requests.post(f'{conf["qBit_HOST"]}api/v2/auth/login', headers=headers, data=auth)
+    except requests.exceptions.Timeout:
+        raise SystemExit('Request to qBittorrent timed out on login')
+    except requests.exceptions.TooManyRedirects:
+        raise SystemExit('Too many redirects. Is qBit_HOST correct?')
+    except ConnectionError as e:
+        if isinstance(e.args[0], MaxRetryError):
+            max_retry_error = e.args[0]
+            if isinstance(max_retry_error.reason, NewConnectionError):
+                raise SystemExit('Failed to establish connection to qBittorrent. Is it running?')
+            raise
+        raise
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(f'CATASTROPHIC ERROR ON qBIT LOGIN: {e}')
 
     if res.status_code != 200:
         exit(f'Login to qBittorrent failed. Status code: {res.status_code}, Response: {res.text}')
