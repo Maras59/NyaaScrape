@@ -2,6 +2,6 @@
 
 source venv/bin/activate
 
-python /src/script.py
+python src/script.py
 
 deactivate
