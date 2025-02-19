@@ -37,15 +37,6 @@ class MainCLI(cmd.Cmd):
         Directory [Required]:           Folder to store show files in, base path is in config.yaml
         Keywords [Optional]:            Additional keywords, useful for when subgroups upload multiple versions of the same episode
         """
-        
-        parser = argparse.ArgumentParser()
-        
-        parser.add_argument('-t', '--title', type=str, required=True, help='Show title, only needs to be show title, does not need to be full torrent title but MUST be present in torrent title')
-        parser.add_argument('-s', '--subgroup', type=str, required=False, help='Subgroup, usually within square brackets')
-        parser.add_argument('-d', '--date', type=str, required=False, help='Only download episodes uploaded after certain date, useful for only getting episodes for a a latest season, must be in YYYY-MM-DD format')
-        parser.add_argument('-m', '--maxfilesize', type=str, required=False, help='Maximum file size (in GiB), useful for avoiding the accidental batch download')
-        parser.add_argument('-r', '--directory', type=str, required=True, help='Folder in which torrent will be stored in')
-        parser.add_argument('-b', '--bonus', type=str, help='Bonus keywords related to the entry, helps restrict duplicates (Ex. subgroup that uploads same episode in multiple resolutions, can add keyword \"1080p\" to filter out all other resolutions)')
 
         title = ""
         while not title.strip():
@@ -76,8 +67,6 @@ class MainCLI(cmd.Cmd):
         directory = conf['BASE_PLEX_PATH'] + directory
 
         bonus = input("Bonus (optional): ").strip()
-
-
 
         print(f"\nVerify the following information:")
         print(f"Title: {title}")
