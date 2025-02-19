@@ -1,7 +1,16 @@
 from utils import harvest_magnet_links, start_qBit
 import yaml
+import logging
 
 CONFIG_PATH = 'configs/config_dev.yaml'
+
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(
+    filename='autoneko.log',
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
 
 with open(CONFIG_PATH) as stream:
     try:
@@ -9,5 +18,9 @@ with open(CONFIG_PATH) as stream:
     except yaml.YAMLError as exc:
         exit(exc)
 
+logger.info('Started a magnet link harvest')
+
 magnet_links = harvest_magnet_links(conf=conf)
 start_qBit(magnet_links, conf=conf)
+
+logger.info('Finished magnet link harvest')

@@ -1,4 +1,5 @@
 showdata/shows.csv
 config_dev.yaml
 .venv
+autoneko.log
 __pycache__

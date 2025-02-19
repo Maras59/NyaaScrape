@@ -8,6 +8,8 @@ from datetime import datetime
 from requests.exceptions import ConnectionError
 from urllib3.exceptions import MaxRetryError
 from urllib3.exceptions import NewConnectionError
+import logging
+logger = logging.getLogger(__name__)
 
 def getshowdata(query,subgroup=None,configs=None,keywords=None):
     """
@@ -52,7 +54,6 @@ def getshowdata(query,subgroup=None,configs=None,keywords=None):
 
     return data
 
-
 def harvest_magnet_links(conf):
     with open(conf['SHOW_CSV_PATH'], 'r') as read_obj:
         r = csv.reader(read_obj)
@@ -89,24 +90,30 @@ def start_qBit(magnet_links, conf):
     try:
         res = requests.post(f'{conf["qBit_HOST"]}api/v2/auth/login', headers=headers, data=auth)
     except requests.exceptions.Timeout:
+        logger.critical('Request to qBittorrent timed out on login')
         raise SystemExit('Request to qBittorrent timed out on login')
     except requests.exceptions.TooManyRedirects:
+        logger.error('Too many redirects. Is qBit_HOST correct?')
         raise SystemExit('Too many redirects. Is qBit_HOST correct?')
     except ConnectionError as e:
         if isinstance(e.args[0], MaxRetryError):
             max_retry_error = e.args[0]
             if isinstance(max_retry_error.reason, NewConnectionError):
+                logger.error('Failed to establish connection to qBittorrent. Is it running?')
                 raise SystemExit('Failed to establish connection to qBittorrent. Is it running?')
             raise
         raise
     except requests.exceptions.RequestException as e:
+        logger.error(e)
         raise SystemExit(f'CATASTROPHIC ERROR ON qBIT LOGIN: {e}')
 
     if res.status_code != 200:
+        logger.error(f'Login to qBittorrent failed. Status code: {res.status_code}, Response: {res.text}')
         exit(f'Login to qBittorrent failed. Status code: {res.status_code}, Response: {res.text}')
 
     cookies = res.cookies
     if 'SID' not in cookies:
+        logger.error('No session cookie found while logging into to qBittorrent!')
         exit('No session cookie found while logging into to qBittorrent!')
     headers['Cookie'] = f'SID={cookies['SID']}' # Attach session ID from cookies
 
@@ -123,18 +130,13 @@ def start_qBit(magnet_links, conf):
         else:
             shows_processed.add(magnet_link[2])
 
-    if shows_processed:
-        print('\nProcessed magnet links for the following shows: ')
-        for show in shows_processed:
-            print(show)
+    logger.info(f'Processed magnet links for the following shows: {list(shows_processed)}')
     if failed:
-        print('\nFailed to add the following torrents:\n')
-        for t in failed:
-            print(f'{t}\n')
+        logger.error(f'Failed to add the following torrents: {failed}')
 
     res_logout = requests.post(f'{conf["qBit_HOST"]}api/v2/auth/logout', headers=headers)
     if res_logout.status_code != 200:
-        print(f'Failed to logout. Status code: {res_logout.status_code}, Response: {res_logout.text}')
+        logger.error(f'Failed to logout. Status code: {res_logout.status_code}, Response: {res_logout.text}')
     else:
-        print(f'Script run successfully\nProcessed {len(magnet_links)} magnet links\n')
+        logger.info(f'Script run successfully! Processed {len(magnet_links)} magnet links')
         
