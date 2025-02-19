@@ -1,10 +1,12 @@
-qBit_HOST: "placeholder"
+qBit_HOST: 'placeholder'
 
 credentials:
   username: "placeholder"
   password: "placeholder"
 
-SHOW_CSV_PATH: shows.csv
+SHOW_CSV_PATH: showdata/shows.csv
+
+BASE_PLEX_PATH: "placeholder"
 
 FULL_BATCH_THRESHOLD: 1.5
 

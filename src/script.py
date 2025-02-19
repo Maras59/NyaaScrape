@@ -1,7 +1,7 @@
 from utils import harvest_magnet_links, start_qBit
 import yaml
 
-CONFIG_PATH = 'config_dev.yaml'
+CONFIG_PATH = 'configs/config_dev.yaml'
 
 with open(CONFIG_PATH) as stream:
     try:
@@ -10,5 +10,4 @@ with open(CONFIG_PATH) as stream:
         exit(exc)
 
 magnet_links = harvest_magnet_links(conf=conf)
-
 start_qBit(magnet_links, conf=conf)

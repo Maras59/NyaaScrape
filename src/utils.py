@@ -111,6 +111,7 @@ def start_qBit(magnet_links, conf):
     headers['Cookie'] = f'SID={cookies['SID']}' # Attach session ID from cookies
 
     failed = []
+    shows_processed = set()
     for magnet_link in magnet_links:
         payload = {
             'urls': magnet_link[0],
@@ -119,9 +120,15 @@ def start_qBit(magnet_links, conf):
         res = requests.post(f'{conf["qBit_HOST"]}api/v2/torrents/add', headers=headers, data=payload)
         if res.status_code != 200:
             failed.append(magnet_link[2])
+        else:
+            shows_processed.add(magnet_link[2])
 
+    if shows_processed:
+        print('\nProcessed magnet links for the following shows: ')
+        for show in shows_processed:
+            print(show)
     if failed:
-        print('Failed to add the following torrents:\n')
+        print('\nFailed to add the following torrents:\n')
         for t in failed:
             print(f'{t}\n')
 
@@ -129,5 +136,5 @@ def start_qBit(magnet_links, conf):
     if res_logout.status_code != 200:
         print(f'Failed to logout. Status code: {res_logout.status_code}, Response: {res_logout.text}')
     else:
-        print('Success!')
+        print(f'Script run successfully\nProcessed {len(magnet_links)} magnet links\n')
         
