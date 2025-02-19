@@ -2,7 +2,7 @@ from utils import harvest_magnet_links, start_qBit
 import yaml
 import logging
 
-CONFIG_PATH = 'configs/config_dev.yaml'
+CONFIG_PATH = 'configs/config.yaml'
 
 logger = logging.getLogger(__name__)
 
