@@ -66,9 +66,9 @@ with open("showdata/shows.csv", "w", newline='') as csvfile:
 print('Running setup scripts...')
 
 # Add to cron
-# rc = subprocess.call("./setup.sh")
-# cwd = os.getcwd()
-# cron_job = f'0 */12 * * * /bin/bash {cwd}/run_script.sh >> {cwd}/cron.log 2>&1'
-# os.system(f'(crontab -l; echo "{cron_job}") | crontab -')
+rc = subprocess.call("./setup.sh")
+cwd = os.getcwd()
+cron_job = f'0 */12 * * * /bin/bash {cwd}/run_script.sh >> {cwd}/cron.log 2>&1'
+os.system(f'(crontab -l; echo "{cron_job}") | crontab -')
 
 print('Setup complete!')
