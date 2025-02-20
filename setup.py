@@ -16,9 +16,12 @@ password = None
 download_path = None
 
 if not os.path.exists(CONFIG_PATH):
+    if not os.path.exists():
+        # TODO: Cleanup, this is gross
+        os.makedirs('configs')
+    Path(CONFIG_PATH).touch()
     print('Config file does not exist, creating...')
     print('These configs can be changed later in configs/config.yaml')
-    Path(CONFIG_PATH).touch()
     sleep(1)
 
     host = input('qBittorrent host URL [http://localhost:8080]: ')
