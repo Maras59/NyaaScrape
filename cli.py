@@ -5,7 +5,7 @@ import re
 from datetime import datetime
 from time import sleep
 
-CONFIG_PATH = '../configs/config.yaml'
+CONFIG_PATH = 'configs/config.yaml'
 
 with open(CONFIG_PATH) as stream:
     try:
