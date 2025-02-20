@@ -7,7 +7,7 @@ CONFIG_PATH = 'configs/config.yaml'
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
-    filename='autoneko.log',
+    filename='NyaaScrape.log',
     format='%(asctime)s %(levelname)-8s %(message)s',
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')

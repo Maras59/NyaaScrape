@@ -88,7 +88,7 @@ def start_qBit(magnet_links, conf):
     
     # Perform login request
     try:
-        res = requests.post(f'{conf["qBit_HOST"]}api/v2/auth/login', headers=headers, data=auth)
+        res = requests.post(f'{conf["qBit_HOST"]}/api/v2/auth/login', headers=headers, data=auth)
     except requests.exceptions.Timeout:
         logger.critical('Request to qBittorrent timed out on login')
         raise SystemExit('Request to qBittorrent timed out on login')
@@ -124,7 +124,7 @@ def start_qBit(magnet_links, conf):
             'urls': magnet_link[0],
             'savepath': magnet_link[1]
         }
-        res = requests.post(f'{conf["qBit_HOST"]}api/v2/torrents/add', headers=headers, data=payload)
+        res = requests.post(f'{conf["qBit_HOST"]}/api/v2/torrents/add', headers=headers, data=payload)
         if res.status_code != 200:
             failed.append(magnet_link[2])
         else:
@@ -134,7 +134,7 @@ def start_qBit(magnet_links, conf):
     if failed:
         logger.error(f'Failed to add the following torrents: {failed}')
 
-    res_logout = requests.post(f'{conf["qBit_HOST"]}api/v2/auth/logout', headers=headers)
+    res_logout = requests.post(f'{conf["qBit_HOST"]}/api/v2/auth/logout', headers=headers)
     if res_logout.status_code != 200:
         logger.error(f'Failed to logout. Status code: {res_logout.status_code}, Response: {res_logout.text}')
     else:

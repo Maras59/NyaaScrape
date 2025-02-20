@@ -1,2 +1,2 @@
-# AutoNeko
+# NyaaScrape
 Script for automating torrents 

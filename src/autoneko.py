@@ -16,7 +16,7 @@ with open(CONFIG_PATH) as stream:
 
 class MainCLI(cmd.Cmd):
     prompt = '>> '
-    intro = 'Welcome to AutoNeko. Type "help" for available commands.'
+    intro = 'Welcome to NyaaScrape. Type "help" for available commands.'
 
     def do_hello(self, line):
         """Print a greeting."""
@@ -64,7 +64,7 @@ class MainCLI(cmd.Cmd):
         directory = ""
         while not directory.strip():
             directory = input("Directory (required): ").strip()
-        directory = conf['BASE_PLEX_PATH'] + directory
+        directory = conf['BASE_FILE_PATH'] + directory
 
         bonus = input("Bonus (optional): ").strip()
 
