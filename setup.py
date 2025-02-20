@@ -16,7 +16,7 @@ password = None
 download_path = None
 
 if not os.path.exists(CONFIG_PATH):
-    if not os.path.exists():
+    if not os.path.exists('configs'):
         # TODO: Cleanup, this is gross
         os.makedirs('configs')
     Path(CONFIG_PATH).touch()
