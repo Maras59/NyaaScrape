@@ -1,4 +1,3 @@
-import argparse
 import cmd
 import csv
 import yaml
@@ -6,7 +5,7 @@ import re
 from datetime import datetime
 from time import sleep
 
-CONFIG_PATH = 'configs/config.yaml'
+CONFIG_PATH = '../configs/config.yaml'
 
 with open(CONFIG_PATH) as stream:
     try:
@@ -63,7 +62,7 @@ class MainCLI(cmd.Cmd):
         
         directory = ""
         while not directory.strip():
-            directory = input("Directory (required): ").strip()
+            directory = input("Directory (required, NO LEADING SLASH): ").strip()
         directory = conf['BASE_FILE_PATH'] + directory
 
         bonus = input("Bonus (optional): ").strip()
