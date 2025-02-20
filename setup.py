@@ -22,7 +22,7 @@ if not os.path.exists(CONFIG_PATH):
     host = input('qBittorrent host URL [http://localhost:8080]: ')
     host = 'http://localhost:8080' if host is None else host
     while download_path is None:
-        download_path = input('Enter torrent download path (for a plex server this is would be the /TV/ directory path): ')
+        download_path = input('Enter torrent download path (for a plex server this is would be the /TV/ directory path, include the trailing slash): ')
     while username is None:
         username = input('qBittorrent Web UI username: ')
     while password is None:
