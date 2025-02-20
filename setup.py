@@ -3,6 +3,7 @@ from time import sleep
 import yaml
 import subprocess
 import os
+from pathlib import Path
 
 CONFIG_PATH = 'configs/config.yaml'
 print('Welcome to NyaaScrape')
@@ -17,6 +18,7 @@ download_path = None
 if not os.path.exists(CONFIG_PATH):
     print('Config file does not exist, creating...')
     print('These configs can be changed later in configs/config.yaml')
+    Path(CONFIG_PATH).touch()
     sleep(1)
 
     host = input('qBittorrent host URL [http://localhost:8080]: ')
