@@ -1,7 +1,6 @@
 #!/bin/bash
 
 cd NyaaScrape
-pwd
 
 source venv/bin/activate
 

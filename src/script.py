@@ -10,7 +10,8 @@ logging.basicConfig(
     filename='NyaaScrape.log',
     format='%(asctime)s %(levelname)-8s %(message)s',
     level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
 
 with open(CONFIG_PATH) as stream:
     try:
