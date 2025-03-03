@@ -21,7 +21,7 @@ with open(CONFIG_PATH) as stream:
 
 logger.info('Started a magnet link harvest')
 
-magnet_links = harvest_magnet_links(conf=conf)
+magnet_links, updated_showlist = harvest_magnet_links(conf=conf)
 start_qBit(magnet_links, conf=conf)
 
 logger.info('Finished magnet link harvest')

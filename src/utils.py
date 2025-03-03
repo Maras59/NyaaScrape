@@ -88,14 +88,10 @@ def harvest_magnet_links(conf):
                     show_list[i][2] = torrent['date'].strftime('%Y-%m-%d %H:%M')
                 magnet_links.append((torrent['magnet'], show[4], torrent['title']))
 
-    with open(conf['SHOW_CSV_PATH'], 'w') as file:
-        writer = csv.writer(file)
-        writer.writerows(show_list)
-
-    return magnet_links
+    return magnet_links, show_list
 
 
-def start_qBit(magnet_links, conf):
+def start_qBit(magnet_links, conf, updated_list):
     # start qBit session
     auth = conf['credentials']
     headers = {'Referer': conf['qBit_HOST']}
@@ -157,7 +153,11 @@ def start_qBit(magnet_links, conf):
         f'Processed magnet links for the following shows: {list(shows_processed)}'
     )
     if failed:
-        logger.error(f'Failed to add the following torrents: {failed}')
+        logger.error(f'Failed to add the following torrents: {failed}\nThey may need to be added manually, shows.csv will not be updated')
+    else:
+        with open(conf['SHOW_CSV_PATH'], 'w') as file:
+            writer = csv.writer(file)
+            writer.writerows(updated_list)
 
     res_logout = requests.post(
         f'{conf["qBit_HOST"]}/api/v2/auth/logout', headers=headers
